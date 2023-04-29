@@ -8,6 +8,7 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
+import org.springframework.stereotype.Service;
 
 import fr.liza.elba.model.enumeration.Espece;
 import fr.liza.elba.model.enumeration.Genre;
@@ -15,12 +16,14 @@ import fr.liza.elba.model.enumeration.Orientation;
 import fr.liza.elba.model.enumeration.TypeTrait;
 import fr.liza.elba.model.jpa.Personnalite;
 import fr.liza.elba.model.jpa.Sim;
+import fr.liza.elba.model.jpa.Souhait;
 import fr.liza.elba.model.jpa.Starter;
 import fr.liza.elba.model.jpa.Trait;
 import fr.liza.elba.repository.SouhaitRepository;
 import fr.liza.elba.repository.TraitRepository;
 import fr.liza.elba.service.StarterService;
 
+@Service
 public class StarterServiceImpl implements StarterService {
 
 	@Autowired
@@ -71,6 +74,8 @@ public class StarterServiceImpl implements StarterService {
 
 	private Personnalite creerSimPersonnalite() {
 		Personnalite personnalite = new Personnalite();
+
+		Souhait souhait = souhaitRepository.findRandom();
 
 		personnalite.setSouhait(souhaitRepository.findRandom());
 		personnalite.setTraitMental(traitRepository.findRandomByType(TypeTrait.MENTAL));
