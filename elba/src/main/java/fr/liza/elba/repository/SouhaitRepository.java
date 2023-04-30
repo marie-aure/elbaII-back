@@ -7,7 +7,7 @@ import fr.liza.elba.model.jpa.Souhait;
 
 public interface SouhaitRepository extends JpaRepository<Souhait, Long> {
 
-	@Query("SELECT FROM Souhait ORDER BY random() LIMIT 1")
+	@Query("SELECT s FROM Souhait s ORDER BY random() LIMIT 1")
 	Souhait findRandom();
 
 }

@@ -16,7 +16,6 @@ import fr.liza.elba.model.enumeration.Orientation;
 import fr.liza.elba.model.enumeration.TypeTrait;
 import fr.liza.elba.model.jpa.Personnalite;
 import fr.liza.elba.model.jpa.Sim;
-import fr.liza.elba.model.jpa.Souhait;
 import fr.liza.elba.model.jpa.Starter;
 import fr.liza.elba.model.jpa.Trait;
 import fr.liza.elba.repository.SouhaitRepository;
@@ -37,9 +36,11 @@ public class StarterServiceImpl implements StarterService {
 		List<Sim> simList = creerStarter(nombre);
 
 		Map<Pair<Sim, Sim>, Integer> mapScores = new HashMap<Pair<Sim, Sim>, Integer>();
-		mapScores.putAll(calculerScores(simList, Genre.FEMININ, Orientation.E, Genre.MASCULIN, Orientation.E));
-		mapScores.putAll(calculerScores(simList, Genre.FEMININ, Orientation.O, Genre.FEMININ, Orientation.O));
-		mapScores.putAll(calculerScores(simList, Genre.MASCULIN, Orientation.O, Genre.MASCULIN, Orientation.O));
+		mapScores.putAll(calculerScores(simList, Genre.FEMININ, Genre.MASCULIN, Orientation.E));
+		mapScores.putAll(calculerScores(simList, Genre.FEMININ, Genre.FEMININ, Orientation.O));
+		mapScores.putAll(calculerScores(simList, Genre.MASCULIN, Genre.MASCULIN, Orientation.O));
+
+//		mapScores.entrySet().stream().sorted(Map.Entry.comparingByValue().reversed());
 	}
 
 	private List<Sim> creerStarter(int nombre) {
@@ -75,15 +76,16 @@ public class StarterServiceImpl implements StarterService {
 	private Personnalite creerSimPersonnalite() {
 		Personnalite personnalite = new Personnalite();
 
-		Souhait souhait = souhaitRepository.findRandom();
-
 		personnalite.setSouhait(souhaitRepository.findRandom());
 		personnalite.setTraitMental(traitRepository.findRandomByType(TypeTrait.MENTAL));
 		personnalite.setTraitPhysique(traitRepository.findRandomByType(TypeTrait.PHYSIQUE));
 		personnalite.setTraitSocial(traitRepository.findRandomByType(TypeTrait.SOCIAL));
 		personnalite.setTraitStyleVie(traitRepository.findRandomByType(TypeTrait.STYLE_VIE));
-		personnalite.setTraitBonus(traitRepository.findRandom());
-
+		List<Trait> traits = List.of(personnalite.getTraitMental(), personnalite.getTraitPhysique(),
+				personnalite.getTraitSocial(), personnalite.getTraitStyleVie());
+		while (personnalite.getTraitBonus() == null || traits.contains(personnalite.getTraitBonus())) {
+			personnalite.setTraitBonus(traitRepository.findRandom());
+		}
 		return personnalite;
 	}
 
@@ -108,15 +110,15 @@ public class StarterServiceImpl implements StarterService {
 		return starter;
 	}
 
-	private Map<Pair<Sim, Sim>, Integer> calculerScores(List<Sim> simList, Genre genre1, Orientation orientation1,
-			Genre genre2, Orientation orientation2) {
+	private Map<Pair<Sim, Sim>, Integer> calculerScores(List<Sim> simList, Genre genre1, Genre genre2,
+			Orientation orientation) {
 
 		Map<Pair<Sim, Sim>, Integer> mapScores = new HashMap<>();
 
 		List<Sim> partenaire1List = simList.stream()
-				.filter(sim -> sim.getGenre() == genre1 && sim.getOrientation() == orientation1).toList();
+				.filter(sim -> sim.getGenre() == genre1 && sim.getOrientation() == orientation).toList();
 		List<Sim> partenaire2List = simList.stream()
-				.filter(sim -> sim.getGenre() == genre2 && sim.getOrientation() == orientation2).toList();
+				.filter(sim -> sim.getGenre() == genre2 && sim.getOrientation() == orientation).toList();
 
 		partenaire1List.stream().forEach(partenaire1 -> {
 			partenaire2List.stream().forEach(partenaire2 -> {
