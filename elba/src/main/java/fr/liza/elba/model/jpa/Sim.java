@@ -3,6 +3,7 @@ package fr.liza.elba.model.jpa;
 import fr.liza.elba.model.enumeration.Espece;
 import fr.liza.elba.model.enumeration.Genre;
 import fr.liza.elba.model.enumeration.Orientation;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,12 +41,12 @@ public class Sim {
 	private boolean adulte;
 	private boolean decede;
 	private boolean souhaitRealise;
-	@OneToOne()
+	@OneToOne(cascade = CascadeType.ALL)
 	private Sim conjoint;
 
 	// starter
 	private boolean starter;
-	@OneToOne
+	@Embedded
 	private Starter infoStarter;
 
 }

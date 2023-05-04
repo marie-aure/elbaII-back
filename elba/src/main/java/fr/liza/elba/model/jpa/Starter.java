@@ -1,20 +1,13 @@
 package fr.liza.elba.model.jpa;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
 @Getter
 @Setter
+@Embeddable
 public class Starter {
-
-	@Id
-	@GeneratedValue
-	private Long id;
 
 	private int peau;
 	private int poids;
@@ -34,6 +27,4 @@ public class Starter {
 
 	private int groupe;
 
-	@OneToOne(mappedBy = "infoStarter")
-	private Sim sim;
 }

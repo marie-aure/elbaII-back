@@ -1,12 +1,14 @@
 package fr.liza.elba.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import fr.liza.elba.model.jpa.Personnalite;
 import fr.liza.elba.model.jpa.Sim;
 import fr.liza.elba.model.jpa.Starter;
 import fr.liza.elba.model.jpa.Trait;
+import fr.liza.elba.repository.SimRepository;
 import fr.liza.elba.repository.SouhaitRepository;
 import fr.liza.elba.repository.TraitRepository;
 import fr.liza.elba.service.StarterService;
@@ -31,6 +34,12 @@ public class StarterServiceImpl implements StarterService {
 	@Autowired
 	private TraitRepository traitRepository;
 
+	@Autowired
+	private SimRepository simRepository;
+
+	@Value("${starter.score.min}")
+	private int scoreMin;
+
 	@Override
 	public void genererStarter(int nombre) {
 		List<Sim> simList = creerStarter(nombre);
@@ -40,7 +49,10 @@ public class StarterServiceImpl implements StarterService {
 		mapScores.putAll(calculerScores(simList, Genre.FEMININ, Genre.FEMININ, Orientation.O));
 		mapScores.putAll(calculerScores(simList, Genre.MASCULIN, Genre.MASCULIN, Orientation.O));
 
-//		mapScores.entrySet().stream().sorted(Map.Entry.comparingByValue().reversed());
+		List<Pair<Sim, Sim>> coupleList = formerCouples(mapScores);
+
+		formerGroupes(coupleList);
+
 	}
 
 	private List<Sim> creerStarter(int nombre) {
@@ -206,4 +218,45 @@ public class StarterServiceImpl implements StarterService {
 		return score;
 	}
 
+	private List<Pair<Sim, Sim>> formerCouples(Map<Pair<Sim, Sim>, Integer> mapScores) {
+		List<Sim> simCoupleList = new ArrayList<Sim>();
+		List<Pair<Sim, Sim>> coupleList = new ArrayList<Pair<Sim, Sim>>();
+
+		mapScores.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+				.filter(entry -> entry.getValue() >= scoreMin).forEach(entry -> {
+					if (!simCoupleList.contains(entry.getKey().getFirst())
+							&& !simCoupleList.contains(entry.getKey().getSecond())) {
+						coupleList.add(entry.getKey());
+						simCoupleList.add(entry.getKey().getFirst());
+						simCoupleList.add(entry.getKey().getSecond());
+					}
+				});
+
+		Collections.shuffle(coupleList);
+
+		return coupleList;
+
+	}
+
+	private void formerGroupes(List<Pair<Sim, Sim>> coupleList) {
+
+		Integer groupeId = simRepository.findMaxGroup().orElse(-1);
+		int qteGroupe = (int) Math.floor(coupleList.size() / 8);
+
+		for (int gr = 0; gr < qteGroupe; gr++) {
+			groupeId++;
+			for (int co = 0; co < 8; co++) {
+				Sim sim1 = coupleList.get(gr * 8 + co).getFirst();
+				Sim sim2 = coupleList.get(gr * 8 + co).getSecond();
+				sim1.getInfoStarter().setGroupe(groupeId);
+				sim1.setConjoint(sim2);
+				sim2.getInfoStarter().setGroupe(groupeId);
+				sim2.setConjoint(sim1);
+
+				simRepository.save(sim1);
+				simRepository.save(sim2);
+			}
+		}
+
+	}
 }
