@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import fr.liza.elba.mapper.SimMapper;
+import fr.liza.elba.model.dto.SimDto;
 import fr.liza.elba.model.enumeration.Espece;
 import fr.liza.elba.model.enumeration.Genre;
 import fr.liza.elba.model.enumeration.Orientation;
@@ -36,6 +38,9 @@ public class StarterServiceImpl implements StarterService {
 
 	@Autowired
 	private SimRepository simRepository;
+
+	@Autowired
+	private SimMapper simMapper;
 
 	@Value("${starter.score.min}")
 	private int scoreMin;
@@ -240,7 +245,7 @@ public class StarterServiceImpl implements StarterService {
 
 	private void formerGroupes(List<Pair<Sim, Sim>> coupleList) {
 
-		Integer groupeId = simRepository.findMaxGroup().orElse(-1);
+		Integer groupeId = simRepository.findMaxGroupe().orElse(-1);
 		int qteGroupe = (int) Math.floor(coupleList.size() / 8);
 
 		for (int gr = 0; gr < qteGroupe; gr++) {
@@ -258,5 +263,17 @@ public class StarterServiceImpl implements StarterService {
 			}
 		}
 
+	}
+
+	@Override
+	public List<Integer> listeGroupes() {
+		return simRepository.findDistinctGroupe();
+	}
+
+	@Override
+	public List<SimDto> chargerGroupe(Integer numero) {
+		List<Sim> simListe = simRepository.findByInfoStarterGroupe(numero);
+
+		return simMapper.toDtoList(simListe);
 	}
 }

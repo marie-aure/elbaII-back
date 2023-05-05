@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.liza.elba.model.dto.SimDto;
 import fr.liza.elba.service.StarterService;
 
 @RestController
@@ -20,11 +21,20 @@ public class StarterController {
 	private StarterService starterService;
 
 	@GetMapping("/generer/{nombre}")
-	public List<String> helloWorld(@PathVariable("nombre") Integer nombre) {
+	public void genererStarters(@PathVariable("nombre") Integer nombre) {
 
 		starterService.genererStarter(nombre);
-		
-		return List.of("");
 	}
 
+	@GetMapping("/liste-groupes")
+	public List<Integer> listeGroupes() {
+		
+		return starterService.listeGroupes();
+	}
+
+	@GetMapping("/groupe/{numero}")
+	public List<SimDto> chargerGroupe(@PathVariable("numero") Integer numero) {
+
+		return starterService.chargerGroupe(numero);
+	}
 }
