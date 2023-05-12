@@ -188,3 +188,12 @@ INSERT INTO souhait VALUES
 (79,'Voyageur expérimenté'),
 (80,'Zombificateur magistral'),
 (81,'Zoologiste');
+
+INSERT INTO classe VALUES 
+(1,'Illégitime',NULL),
+(2,'Paysan',3),
+(3,'Pauvre',4),
+(4,'Modeste',5),
+(5,'Aisée',6),
+(6,'Riche',7),
+(7,'Noblesse',NULL);
