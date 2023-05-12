@@ -12,4 +12,5 @@ public interface StarterService {
 
 	List<SimDto> chargerGroupe(Integer numero);
 
+	SimDto completerStarter(SimDto simDto);
 }

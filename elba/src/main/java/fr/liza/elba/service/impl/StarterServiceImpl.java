@@ -26,6 +26,7 @@ import fr.liza.elba.repository.SimRepository;
 import fr.liza.elba.repository.SouhaitRepository;
 import fr.liza.elba.repository.TraitRepository;
 import fr.liza.elba.service.StarterService;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class StarterServiceImpl implements StarterService {
@@ -113,6 +114,7 @@ public class StarterServiceImpl implements StarterService {
 		starter.setPoids(rnd.nextInt(10) + 1);
 		starter.setMuscle(rnd.nextInt(10) + 1);
 		starter.setPoitrine(rnd.nextInt(10) + 1);
+		starter.setCouleurCheveux(rnd.nextInt(8) + 1);
 		starter.setCheveux(rnd.nextInt(8) + 1);
 		starter.setVisage(rnd.nextInt(12) + 1);
 		starter.setCouleurYeux(rnd.nextInt(8) + 1);
@@ -275,5 +277,17 @@ public class StarterServiceImpl implements StarterService {
 		List<Sim> simListe = simRepository.findByInfoStarterGroupe(numero);
 
 		return simMapper.toDtoList(simListe);
+	}
+
+	@Override
+	public SimDto completerStarter(SimDto simDto) throws EntityNotFoundException {
+		Sim sim = simRepository.findById(simDto.getId()).orElseThrow(EntityNotFoundException::new);
+		
+		sim.setPrenom(simDto.getPrenom());
+		sim.setNom(simDto.getNom());
+		
+		sim = simRepository.save(sim);
+		
+		return simMapper.toDto(sim);
 	}
 }
