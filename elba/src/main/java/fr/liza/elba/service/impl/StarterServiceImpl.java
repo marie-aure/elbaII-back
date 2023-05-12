@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import fr.liza.elba.mapper.SimMapper;
+import fr.liza.elba.model.dto.SimDto;
 import fr.liza.elba.model.enumeration.Espece;
 import fr.liza.elba.model.enumeration.Genre;
 import fr.liza.elba.model.enumeration.Orientation;
@@ -24,6 +26,7 @@ import fr.liza.elba.repository.SimRepository;
 import fr.liza.elba.repository.SouhaitRepository;
 import fr.liza.elba.repository.TraitRepository;
 import fr.liza.elba.service.StarterService;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class StarterServiceImpl implements StarterService {
@@ -36,6 +39,9 @@ public class StarterServiceImpl implements StarterService {
 
 	@Autowired
 	private SimRepository simRepository;
+
+	@Autowired
+	private SimMapper simMapper;
 
 	@Value("${starter.score.min}")
 	private int scoreMin;
@@ -108,6 +114,7 @@ public class StarterServiceImpl implements StarterService {
 		starter.setPoids(rnd.nextInt(10) + 1);
 		starter.setMuscle(rnd.nextInt(10) + 1);
 		starter.setPoitrine(rnd.nextInt(10) + 1);
+		starter.setCouleurCheveux(rnd.nextInt(8) + 1);
 		starter.setCheveux(rnd.nextInt(8) + 1);
 		starter.setVisage(rnd.nextInt(12) + 1);
 		starter.setCouleurYeux(rnd.nextInt(8) + 1);
@@ -240,7 +247,7 @@ public class StarterServiceImpl implements StarterService {
 
 	private void formerGroupes(List<Pair<Sim, Sim>> coupleList) {
 
-		Integer groupeId = simRepository.findMaxGroup().orElse(-1);
+		Integer groupeId = simRepository.findMaxGroupe().orElse(-1);
 		int qteGroupe = (int) Math.floor(coupleList.size() / 8);
 
 		for (int gr = 0; gr < qteGroupe; gr++) {
@@ -258,5 +265,29 @@ public class StarterServiceImpl implements StarterService {
 			}
 		}
 
+	}
+
+	@Override
+	public List<Integer> listeGroupes() {
+		return simRepository.findDistinctGroupe();
+	}
+
+	@Override
+	public List<SimDto> chargerGroupe(Integer numero) {
+		List<Sim> simListe = simRepository.findByInfoStarterGroupe(numero);
+
+		return simMapper.toDtoList(simListe);
+	}
+
+	@Override
+	public SimDto completerStarter(SimDto simDto) throws EntityNotFoundException {
+		Sim sim = simRepository.findById(simDto.getId()).orElseThrow(EntityNotFoundException::new);
+		
+		sim.setPrenom(simDto.getPrenom());
+		sim.setNom(simDto.getNom());
+		
+		sim = simRepository.save(sim);
+		
+		return simMapper.toDto(sim);
 	}
 }
