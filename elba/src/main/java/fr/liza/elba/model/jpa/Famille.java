@@ -28,18 +28,18 @@ public class Famille {
 	private int generation;
 	private int argentIG;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.MERGE)
 	private Sim chef;
 
 	@ManyToOne
 	private Classe classe;
 
-	@OneToMany(mappedBy = "famille")
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@OneToMany(mappedBy = "famille", cascade = CascadeType.MERGE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	private List<Sim> sims;
 
-	@OneToMany(mappedBy = "familleOrigine")
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@OneToMany(mappedBy = "familleOrigine", cascade = CascadeType.MERGE)
+	@LazyCollection(LazyCollectionOption.TRUE)
 	private List<Sim> simsOrigine;
 
 }

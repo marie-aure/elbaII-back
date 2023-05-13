@@ -27,6 +27,7 @@ public class Sim {
 
 	private String prenom;
 	private String nom;
+	private String nomOrigine;
 	@Enumerated(EnumType.STRING)
 	private Genre genre;
 	@Enumerated(EnumType.STRING)
@@ -52,10 +53,10 @@ public class Sim {
 	private Starter infoStarter;
 
 	// liaisons
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	private Famille famille;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	private Famille familleOrigine;
 
 }
