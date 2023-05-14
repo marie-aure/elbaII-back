@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Orientation {
 
-	O("Ho"), E("Hé");
+	E("Hé"), O("Ho");
 
 	private String orientation;
 }
