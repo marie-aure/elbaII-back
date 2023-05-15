@@ -115,7 +115,6 @@ public class StarterServiceImpl implements StarterService {
 		starter.setMuscle(rnd.nextInt(10) + 1);
 		starter.setPoitrine(rnd.nextInt(10) + 1);
 		starter.setCouleurCheveux(rnd.nextInt(8) + 1);
-		starter.setCheveux(rnd.nextInt(8) + 1);
 		starter.setVisage(rnd.nextInt(12) + 1);
 		starter.setCouleurYeux(rnd.nextInt(8) + 1);
 		starter.setYeux(rnd.nextInt(15) + 1);
