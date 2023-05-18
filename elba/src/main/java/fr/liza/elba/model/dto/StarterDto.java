@@ -14,7 +14,6 @@ public class StarterDto {
 	private int muscle;
 	private int poitrine;
 	private int couleurCheveux;
-	private int cheveux;
 	private int visage;
 	private int couleurYeux;
 	private int yeux;

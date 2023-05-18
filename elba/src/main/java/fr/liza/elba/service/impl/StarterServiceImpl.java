@@ -67,7 +67,7 @@ public class StarterServiceImpl implements StarterService {
 
 		// TODO souhait et traits
 		int[] enumEspece = { 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8 };
-		int[] enumOrientation = { 1, 0, 0, 0 };
+		int[] enumOrientation = { 1, 0, 0 };
 
 		Random rnd = new Random();
 
@@ -77,7 +77,7 @@ public class StarterServiceImpl implements StarterService {
 			sim.setNom(String.valueOf((char) (rnd.nextInt(26) + 'A')));
 			sim.setGenre(Genre.values()[rnd.nextInt(2)]);
 			sim.setEspece(Espece.values()[enumEspece[rnd.nextInt(15)]]);
-			sim.setOrientation(Orientation.values()[enumOrientation[rnd.nextInt(4)]]);
+			sim.setOrientation(Orientation.values()[enumOrientation[rnd.nextInt(3)]]);
 			sim.setMarie(false);
 			sim.setSouhaitRealise(false);
 			sim.setDecede(false);
@@ -115,7 +115,6 @@ public class StarterServiceImpl implements StarterService {
 		starter.setMuscle(rnd.nextInt(10) + 1);
 		starter.setPoitrine(rnd.nextInt(10) + 1);
 		starter.setCouleurCheveux(rnd.nextInt(8) + 1);
-		starter.setCheveux(rnd.nextInt(8) + 1);
 		starter.setVisage(rnd.nextInt(12) + 1);
 		starter.setCouleurYeux(rnd.nextInt(8) + 1);
 		starter.setYeux(rnd.nextInt(15) + 1);

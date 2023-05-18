@@ -1,6 +1,7 @@
 package fr.liza.elba.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -31,7 +32,7 @@ public class CreerFamilleServiceImpl implements CreerFamilleService {
 	private FamilleRepository familleRepository;
 
 	@Override
-	public List<Famille> transformerGroupe(int groupe) {
+	public void transformerGroupe(int groupe) {
 
 		List<Sim> starters = simRepository.findByInfoStarterGroupe(groupe);
 
@@ -60,19 +61,16 @@ public class CreerFamilleServiceImpl implements CreerFamilleService {
 				conjoint.setNomOrigine(conjoint.getNom());
 				conjoint.setNom(sim.getNom());
 
-				famille.setSims(List.of(sim, conjoint));
+				famille.setSims(Arrays.asList(sim, conjoint));
 				famille.setSimsOrigine(famille.getSims());
 
 				familles.add(famille);
 
 				// save
 				familleRepository.save(famille);
-				simRepository.save(sim);
-				simRepository.save(conjoint);
 			}
 		});
 
-		return familles;
 	}
 
 	private Sim genererChefFamille(Sim sim, Sim conjoint) {
