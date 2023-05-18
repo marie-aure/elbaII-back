@@ -1,10 +1,16 @@
 package fr.liza.elba.service;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
 
-@Service
+import fr.liza.elba.model.dto.SimDto;
+
 public interface StarterService {
 
 	void genererStarter(int nombre);
 
+	List<Integer> listeGroupes();
+
+	List<SimDto> chargerGroupe(Integer numero);
+
+	SimDto completerStarter(SimDto simDto);
 }

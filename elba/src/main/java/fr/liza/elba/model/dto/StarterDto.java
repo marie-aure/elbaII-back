@@ -1,4 +1,4 @@
-package fr.liza.elba.model.jpa;
+package fr.liza.elba.model.dto;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class Starter {
+public class StarterDto {
 
 	private int peau;
 	private int poids;

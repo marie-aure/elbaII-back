@@ -8,7 +8,7 @@ import fr.liza.elba.model.jpa.Trait;
 
 public interface TraitRepository extends JpaRepository<Trait, Long> {
 
-	@Query("SELECT Trait ORDER BY random() LIMIT 1")
+	@Query("SELECT t from Trait t ORDER BY random() LIMIT 1")
 	Trait findRandom();
 
 	@Query("SELECT t from Trait t WHERE type = :type ORDER BY random() LIMIT 1")

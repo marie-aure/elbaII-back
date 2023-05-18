@@ -3,12 +3,15 @@ package fr.liza.elba.model.jpa;
 import fr.liza.elba.model.enumeration.Espece;
 import fr.liza.elba.model.enumeration.Genre;
 import fr.liza.elba.model.enumeration.Orientation;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +27,7 @@ public class Sim {
 
 	private String prenom;
 	private String nom;
+	private String nomOrigine;
 	@Enumerated(EnumType.STRING)
 	private Genre genre;
 	@Enumerated(EnumType.STRING)
@@ -40,12 +44,19 @@ public class Sim {
 	private boolean adulte;
 	private boolean decede;
 	private boolean souhaitRealise;
-	@OneToOne()
+	@OneToOne(cascade = CascadeType.ALL)
 	private Sim conjoint;
 
 	// starter
 	private boolean starter;
-	@OneToOne
+	@Embedded
 	private Starter infoStarter;
+
+	// liaisons
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	private Famille famille;
+
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	private Famille familleOrigine;
 
 }
