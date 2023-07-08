@@ -12,9 +12,11 @@ import fr.liza.elba.model.enumeration.Genre;
 import fr.liza.elba.model.jpa.Classe;
 import fr.liza.elba.model.jpa.Famille;
 import fr.liza.elba.model.jpa.Sim;
+import fr.liza.elba.model.jpa.Tour;
 import fr.liza.elba.repository.ClasseRepository;
 import fr.liza.elba.repository.FamilleRepository;
 import fr.liza.elba.repository.SimRepository;
+import fr.liza.elba.repository.TourRepository;
 import fr.liza.elba.service.CreerFamilleService;
 import fr.liza.elba.utils.ApplicationConstants;
 import jakarta.persistence.EntityNotFoundException;
@@ -30,6 +32,9 @@ public class CreerFamilleServiceImpl implements CreerFamilleService {
 
 	@Autowired
 	private FamilleRepository familleRepository;
+
+	@Autowired
+	private TourRepository tourRepository;
 
 	@Override
 	public void transformerGroupe(int groupe) {
@@ -64,10 +69,13 @@ public class CreerFamilleServiceImpl implements CreerFamilleService {
 				famille.setSims(Arrays.asList(sim, conjoint));
 				famille.setSimsOrigine(famille.getSims());
 
+				Tour tour = creerTour(famille, classe);
+
 				familles.add(famille);
 
 				// save
 				familleRepository.save(famille);
+				tourRepository.save(tour);
 			}
 		});
 
@@ -88,6 +96,16 @@ public class CreerFamilleServiceImpl implements CreerFamilleService {
 		}
 
 		return chef;
+	}
+
+	private Tour creerTour(Famille famille, Classe classe) {
+
+		Tour minNumero = tourRepository.findFirstByFamilleClasseOrderByNumero(classe).orElse(null);
+
+		Tour tour = new Tour();
+		tour.setFamille(famille);
+		tour.setNumero(minNumero != null ? minNumero.getNumero() : 0);
+		return tour;
 	}
 
 }

@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>fr.liza</groupId>
 	<artifactId>elba</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>elba</name>
 	<description>Backend elba 2</description>
 	<properties>
