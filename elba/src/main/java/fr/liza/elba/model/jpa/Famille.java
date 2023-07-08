@@ -42,4 +42,6 @@ public class Famille {
 	@LazyCollection(LazyCollectionOption.TRUE)
 	private List<Sim> simsOrigine;
 
+	@OneToOne(optional = false, mappedBy = "famille")
+	private Tour tour;
 }
