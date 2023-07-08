@@ -55,6 +55,7 @@ public class CreerFamilleServiceImpl implements CreerFamilleService {
 				famille.setChef(chef);
 				famille.setNom(chef.getNom());
 				famille.setArgentIG(0);
+				famille.setGeneration(1);
 				famille.setClasse(classe);
 				
 				sim.setFamille(famille);
